@@ -1,8 +1,36 @@
 const express = require('express');
+const redis = require('redis');
 const app = express();
 const port = 3000;
 
-// Set CORS headers
+/* --- SETTING UP CONNECTION TO REDIS --- */
+
+const redisURL = process.env.KEEPER_REDIS_URL;
+const redisClient = redis.createClient({
+  url: redisURL
+});
+
+async function setupRedis(){
+
+  await redisClient.connect();
+  const value = await redisClient.get('key');
+  console.log('Retrieved from Redis: ', value);
+}
+
+//Check if redis client is connected
+redisClient.on('connect', function() {
+  console.log('Connected to Redis');
+  console.log("Port is open for Redis Client: " + redisClient.isOpen);
+});
+
+redisClient.on('error', function (err) {
+  console.error('Error connecting to Redis:', err);
+});
+
+//Calling function
+setupRedis();
+
+/* --- SETTING UP CORS POLICIES --- */
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*'); // Replace '*' with specific origins if needed
   res.header('Access-Control-Allow-Methods', 'GET, POST');
@@ -13,14 +41,13 @@ app.use((req, res, next) => {
 //Middleware to parse json
 app.use(express.json());
 
-// Your other routes and logic here
+/* --- ROUTES --- */
 
 // Default route
-// app.get('/', (req, res) => {
-
-//     console.log('GET route activated');
-//     res.send({'message': 'Hello from Backend'});
-// });
+app.get('/', (req, res) => {
+  
+    res.send({'message': 'Hello from Backend'});
+});
 
 // This route checks if url in req is in the backend or not
 app.post('/', (req, res) => {
