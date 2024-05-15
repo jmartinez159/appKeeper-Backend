@@ -1,10 +1,6 @@
-# Welcome to Application Keeper Backend
-This repository is the backend to the application of Application Keeper. The server is running on an AWS EC2
-instance waiting for a request sent from the frontend(web browser extension).
+# Application Keeper Backend
+This application serves as the backend to the Application Keeper web browser extension. This application is in charge of handling request and communicating to the Redis database.
 
 # How it works
-The server can be started by running:
-`node server.js`
-
-If you would also like to run it on an EC2 instance visit:
-https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/get-set-up-for-amazon-ec2.html
+Start server with 'node server.js'
+Server takes requests from the frontend(web browser extension) and then reads or sets data in the database. Server communicates with the Redis Cloud for quick responses.
