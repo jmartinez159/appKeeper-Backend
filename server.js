@@ -49,12 +49,28 @@ app.get('/', (req, res) => {
     res.send({'message': 'Hello from Backend'});
 });
 
-// This route checks if url in req is in the backend or not
-app.post('/', (req, res) => {
+app.post('/check', async (req, res) => {
 
-    console.log('POST route activated');
-    console.log(req.body);
-    res.send({'message': 'POST Request received'});
+  console.log('Post Request Check: ');
+  console.log('KEY: ', req.body.KEY);
+  let key = req.body.KEY;
+  let entry = await redisClient.get(key);
+  console.log('Redis checked: ', entry);
+  res.send({'message': 'Checked'});
+});
+
+// This route 
+app.post('/submit', async (req, res) => {
+
+    console.log('POST Request Submit: ');
+    console.log('KEY: ', req.body.KEY);
+    console.log('DATE: ', req.body.DATE);
+    let key = req.body.KEY;
+    let date = req.body.DATE;
+    await redisClient.set(key, date);
+    let newEntry = await redisClient.get(key);
+    console.log('New Entry From Redis', newEntry);
+    res.send({'message': 'Submitted'});
 });
 
 // Start the server
